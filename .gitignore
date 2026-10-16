@@ -1,0 +1,13 @@
+# secrets
+profiles.yml
+.user.yml
+
+# dbt artifacts
+target/
+dbt_packages/
+logs/
+
+# python
+.venv/
+__pycache__/
+.DS_Store

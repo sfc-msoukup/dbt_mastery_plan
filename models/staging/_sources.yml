@@ -1,0 +1,20 @@
+sources:
+  - name: raw
+    database: DBT_MASTERY_LAB
+    schema: RAW
+    description: "Landing tables laoded by COPY INTO. dbt never writes here."
+    config:
+      loaded_at_field: _loaded_at
+      freshness:
+        warn_after: {count:2, period: day}
+        error_after: {count: 4, period: day}
+    tables:
+      - name: crypto_ohlcv
+        description: "Bitstamp daily OHlCV for BTC and ETH from CryptoDataDownload."
+        columns:
+          - name: symbol
+            description: "Pair, e.g. BTC/USD"
+          - name: trade_ts
+            description: "Bar open time, UTC"
+      - name: fred_observations
+        description: "FRED series, one row per series per observation date. Missing values arrive as empty strings"

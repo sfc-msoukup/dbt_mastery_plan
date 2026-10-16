@@ -1,0 +1,9 @@
+name: market_analytics
+version: '1.0.0'
+profile: market_analytics
+
+models:
+  market_analytics:
+    staging:
+      +materialized: view
+      +schema: staging

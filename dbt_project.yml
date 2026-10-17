@@ -7,3 +7,10 @@ models:
     staging:
       +materialized: view
       +schema: staging
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+
+seeds:
+  market_analytics:
+    +schema: seeds

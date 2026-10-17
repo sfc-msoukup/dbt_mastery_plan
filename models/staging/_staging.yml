@@ -1,0 +1,31 @@
+models:
+  - name: stg_crypto__daily_prices
+    description: "One row per asset per completed UTC day."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['asset_code', 'price_date']
+    columns:
+      - name: asset_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('assets')
+                field: asset_code
+      - name: close_usd
+        data_tests:
+          - not_null
+          - not_negative
+
+  - name: stg_fred__observations
+    description: "FRED observations with empty-string gaps removed and values cast to numbers."
+    columns:
+      - name: series_id
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['DFF', 'DGS10', 'CPIAUCSL']
+      - name: value
+        data_tests:
+          - not_null

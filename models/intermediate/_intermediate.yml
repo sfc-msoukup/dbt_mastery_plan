@@ -1,0 +1,14 @@
+unit_tests:
+  - name: daily_return_is_change_over_prior_close
+    model: int_crypto__daily_returns
+    given:
+      - input: ref('stg_crypto__daily_prices')
+        rows:
+          - {asset_code: BTC, price_date: 2026-07-01, close_usd: 80}
+          - {asset_code: BTC, price_date: 2026-07-02, close_usd: 100}
+          - {asset_code: ETH, price_date: 2026-07-01, close_usd: 50}
+    expect:
+      rows:
+        - {asset_code: BTC, price_date: 2026-07-01, daily_return: null}
+        - {asset_code: BTC, price_date: 2026-07-02, daily_return: 0.25}
+        - {asset_code: ETH, price_date: 2026-07-01, daily_return: null}

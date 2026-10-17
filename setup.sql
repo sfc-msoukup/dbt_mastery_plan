@@ -27,7 +27,7 @@ CREATE OR REPLACE TABLE fred_observations (
 --    b) Snowflake CLI (snow sql) from your laptop:
 -- PUT 'file:///path/to/Bitstamp_*.csv' @landing/crypto/;
 -- PUT 'file:///path/to/fred_*.csv'     @landing/fred/;
--- snow stage copy 'Bitstamp_*.csv' @landing/crypto/;
+-- snow stage copy 'Bitstamp_*.csv' @landing/crypto/;  --overwrite
 -- snow stage copy 'fred_*.csv' @landing/fred/;
 
 -- VERIFY:
@@ -37,6 +37,7 @@ ls @DBT_MASTERY_LAB.RAW.LANDING/fred;
 COPY INTO crypto_ohlcv FROM (
   SELECT $1,$2,$3,$4,$5,$6,$7,$8,$9, METADATA$FILENAME, CURRENT_TIMESTAMP()
   FROM @landing/crypto/) FILE_FORMAT = (FORMAT_NAME = 'cdd_csv');
+
 COPY INTO fred_observations FROM (
   SELECT REGEXP_SUBSTR(METADATA$FILENAME, 'fred_([A-Z0-9]+)\\.csv', 1, 1, 'e'),  -- series id from file name
          $1, $2, METADATA$FILENAME, CURRENT_TIMESTAMP()

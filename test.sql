@@ -13,3 +13,16 @@ limit 100;
 
 select MAX(_LOADED_AT)
 from dbt_mastery_lab.raw.crypto_ohlcv;
+
+with days as (
+select row_number() over (order by seq4()) -1 as n
+from table(generator(rowcount => 10000)))
+
+select dateadd(day, n, '2014-11-01'::date) as date_day
+from days
+where dateadd(day, n, '2014-11-01'::date) < current_date();
+
+select *
+from dbt_mastery_lab.dbt_mts_intermediate.int_macro__daily_rates;
+
+

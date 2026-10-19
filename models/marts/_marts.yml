@@ -1,0 +1,10 @@
+models:
+  - name: fct_daily_asset_returns
+    description: "Daily return per asset, with the rates on that day."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['asset_code', 'price_date']
+
+  - name: mart_quarterly_returns
+    description: "The single governed definition of quarterly return: daily returns compounded."

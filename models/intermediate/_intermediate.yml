@@ -1,3 +1,11 @@
+models:
+  - name: int_macro__daily_rates
+    columns:
+      - name: rate_date
+        data_tests:
+          - unique
+          - not_null
+
 unit_tests:
   - name: daily_return_is_change_over_prior_close
     model: int_crypto__daily_returns

@@ -2,6 +2,9 @@ name: market_analytics
 version: '1.0.0'
 profile: market_analytics
 
+vars:
+  fred_series: ['DFF', 'DGS10', 'CPIAUCSL']
+
 models:
   market_analytics:
     staging:
@@ -10,6 +13,9 @@ models:
     intermediate:
       +materialized: table
       +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
 
 seeds:
   market_analytics:

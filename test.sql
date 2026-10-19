@@ -25,4 +25,7 @@ where dateadd(day, n, '2014-11-01'::date) < current_date();
 select *
 from dbt_mastery_lab.dbt_mts_intermediate.int_macro__daily_rates;
 
+select *
+from dbt_mastery_lab.dbt_mts_marts.mart_quarterly_returns
+ORDER BY quarter_start desc;
 

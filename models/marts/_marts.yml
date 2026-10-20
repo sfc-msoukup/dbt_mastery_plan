@@ -1,6 +1,15 @@
+groups:
+  - name: markets
+    owner:
+      name: Markets Analytics
+      email: markets-analytics@example.com
+
 models:
   - name: fct_daily_asset_returns
-    description: "Daily return per asset, with the rates on that day."
+    description: "Daily return per asset, with the fed funds rate on that day."
+    config:
+      group: markets
+      access: protected
     data_tests:
       - dbt_utils.unique_combination_of_columns:
           arguments:
@@ -8,3 +17,25 @@ models:
 
   - name: mart_quarterly_returns
     description: "The single governed definition of quarterly return: daily returns compounded."
+    config:
+      group: markets
+      access: public
+      contract:
+        enforced: true      # This is what enforces schema
+    columns:
+      - name: asset_code
+        data_type: varchar
+        constraints:
+          - type: not_null
+      - name: quarter_start
+        data_type: date
+      - name: trading_days
+        data_type: number
+      - name: quarterly_return
+        data_type: float
+      - name: avg_fed_funds_rate_pct
+        data_type: float
+      - name: asset_name
+        data_type: varchar
+      - name: asset_class
+        data_type: varchar

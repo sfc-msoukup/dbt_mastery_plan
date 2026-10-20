@@ -11,3 +11,8 @@ logs/
 .venv/
 __pycache__/
 .DS_Store
+
+# local env vars / secrets
+.env
+.env.*
+!.env.example

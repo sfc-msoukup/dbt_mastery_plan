@@ -1,12 +1,9 @@
-with days as (
-    select row_number() over (order by seq4()) -1 as n
-    from table(generator(rowcount => 10000))
-),
-
-spine as (
-    select dateadd(day, n, '2014-11-01'::date) as date_day
-    from days
-    where dateadd(day, n, '2014-11-01'::date) < current_date()
+with spine as (
+    {{ dbt_utils.date_spine(
+        datepart="day",
+        start_date="cast('2014-11-01' as date)",
+        end_date="current_date()"
+    ) }}
 ),
 
 observations as (
@@ -16,9 +13,10 @@ observations as (
 wide as (
     select
         spine.date_day as rate_date,
-        max(case when observations.series_id = 'DFF' then observations.value end) as dff,
-        max(case when observations.series_id = 'DGS10' then observations.value end) as dgs10,
-        max(case when observations.series_id = 'CPIAUCSL' then observations.value end) as cpiaucsl
+        {% for s in var('fred_series') %}
+        max(case when observations.series_id = '{{ s }}' then observations.value end) as {{ s | lower }}
+        {%- if not loop.last %},{% endif %}
+        {% endfor %}
     from spine
     left join observations
         on observations.observation_date = spine.date_day
@@ -28,15 +26,12 @@ wide as (
 filled as (
     select
         rate_date,
-        last_value(dff ignore nulls) over (
+        {% for s in var('fred_series') %}
+        last_value({{ s | lower }} ignore nulls) over (
             order by rate_date rows between unbounded preceding and current row
-        ) as dff,
-        last_value(dgs10 ignore nulls) over (
-            order by rate_date rows between unbounded preceding and current row
-        ) as dgs10,
-        last_value(cpiaucsl ignore nulls) over (
-            order by rate_date rows between unbounded preceding and current row
-        ) as cpiaucsl
+        ) as {{ s | lower }}
+        {%- if not loop.last %},{% endif %}
+        {% endfor %}
     from wide
 )
 

@@ -1,6 +1,21 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key=['asset_code', 'price_date'],
+        incremental_strategy='merge',
+        on_schema_change='fail'
+    )
+}}
+
 with cte_returns as (
     select * from {{ ref('int_crypto__daily_returns') }}
     where daily_return is not null
+    {% if is_incremental() %}
+        -- re-process a few days so late corrections to recent bars are merged in
+        and price_date >= (
+            select dateadd(day, -{{var('incremental_lookback_days')}}, max(price_date)) from {{ this }}
+        )
+    {% endif %}
 ),
 
 rates as (

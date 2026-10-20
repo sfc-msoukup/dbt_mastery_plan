@@ -4,6 +4,7 @@ profile: market_analytics
 
 vars:
   fred_series: ['DFF', 'DGS10', 'CPIAUCSL']
+  incremental_lookback_days: 3
 
 models:
   market_analytics:

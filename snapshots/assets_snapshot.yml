@@ -1,0 +1,9 @@
+snapshots:
+  - name: assets_snapshot
+    relation: ref('assets')
+    config:
+      schema: snapshots
+      unique_key: asset_code
+      strategy: check
+      check_cols: ['risk_tier']
+      hard_deletes: invalidate

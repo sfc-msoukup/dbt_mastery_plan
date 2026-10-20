@@ -29,3 +29,6 @@ select *
 from dbt_mastery_lab.dbt_mts_marts.mart_quarterly_returns
 ORDER BY quarter_start desc;
 
+
+select *
+from dbt_mastery_lab.dbt_mts_snapshots.assets_snapshot;
